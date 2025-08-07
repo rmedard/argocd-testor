@@ -1,0 +1,108 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: e705-back-deployment
+  namespace: doa-e705-dev
+  labels:
+    app: e705-app
+  annotations:
+    sidecar.jaegertracing.io/inject: "true"
+spec:
+  replicas: 1
+  revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      app: e705-app
+  template:
+    metadata:
+      namespace: doa-e705-dev
+      labels:
+        app: e705-app
+      annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: '8080'
+        prometheus.io/path: '/api/actuator/prometheus'
+        co.elastic.logs/enabled: 'true'
+        co.elastic.logs/json.add_error_key: 'true'
+        co.elastic.logs/json.keys_under_root: 'true'
+    spec:
+      serviceAccountName: sa-gitlab-doa-e705
+      automountServiceAccountToken: false
+      containers:
+        - name: e705-back
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
+          image: e705:1.0.1-854-e9551f4b
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - name: config
+              mountPath: /opt/app/config
+          env:
+            - name: SERVER_PORT
+              value: "8080"
+            - name: MANAGEMENT_SERVER_PORT
+              value: "8080"
+            - name: JAVA_TOOL_OPTIONS
+              value: "-Dspring.profiles.active=dev -Dspring.config.additional-location=/opt/app/config/"
+            - name: HTTP_PROXY
+              value: "http://proxies.finbel.intra:8080"
+            - name: APP_VERSION
+              value: "1.0.1-854-e9551f4b"
+            - name: HTTPS_PROXY
+              value: "http://proxies.finbel.intra:8080"
+            - name: NO_PROXY
+              value: "localhost,127.0.0.0/8,.finbel.intra,.cluster.local"
+          envFrom:
+            - configMapRef:
+                name: e705-back-config
+            - secretRef:
+                name: external-e705-secrets
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+            - name: management
+              containerPort: 8080
+              protocol: TCP
+          startupProbe:
+            httpGet:
+              path: /api/actuator/health
+              port: 8080
+            failureThreshold: 30
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /api/actuator/health
+              port: 8080
+            initialDelaySeconds: 90
+            timeoutSeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /api/actuator/health
+              port: 8080
+            initialDelaySeconds: 90
+            timeoutSeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          resources:
+            limits:
+              memory: 2Gi
+            requests:
+              cpu: 100m
+              memory: 256Mi
+              ephemeral-storage: 1Gi
+      volumes:
+        - name: config
+          configMap:
+            name: e705-back-config
+        - name: secret
+          secret:
+            secretName: external-e705-secrets

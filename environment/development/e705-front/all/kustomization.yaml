@@ -1,0 +1,48 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+metadata:
+  name: e705-ui
+  namespace: doa-e705-dev
+
+resources:
+  - deployment.yaml
+  - service.yaml
+  - configmap.yaml
+  - service-account.yaml
+  - ingress.yaml
+
+# Common labels applied to all resources
+labels:
+  - pairs:
+      app.kubernetes.io/name: e705-ui
+      app.kubernetes.io/instance: e705-ui-service
+      app.kubernetes.io/version: 0.0.1-561-9542900d
+      app.kubernetes.io/component: e705-front
+      app.kubernetes.io/part-of: e705-app
+
+# Namespace for all resources
+namespace: default
+
+# Name prefix for all resources
+namePrefix: e705-ui-
+
+# Images to use
+images:
+  - name: e705-ui
+    newName: finvmharborp01.finbel.intra/doa-e705/e705-ui
+    newTag: 0.0.1-561-9542900d
+
+# ConfigMap generator for application config
+configMapGenerator:
+  - name: e705-ui-config
+    literals: []
+    # Add config values as needed, for example:
+    # - SERVER_PORT=8080
+    # - LOG_LEVEL=info
+
+# Patches for environment-specific customizations
+patches:
+  - path: patches/resource-limits.yaml
+    target:
+      kind: Deployment
+      name: e705-ui

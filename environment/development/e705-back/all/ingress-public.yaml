@@ -1,0 +1,31 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: e705-ingress-public
+  namespace: doa-e705-dev
+  labels:
+    app: e705-app
+    version: 1.0.1-854-e9551f4b
+  annotations:
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "*"
+    nginx.ingress.kubernetes.io/cors-allow-methods: "GET, POST, OPTIONS, HEAD"
+    nginx.ingress.kubernetes.io/cors-allow-headers: "Authorization, Origin, X-Requested-With, Content-Type, Accept"
+    minfin.oauth2.be/iam-realm: "public"
+spec:
+  rules:
+    - host: e705.dev.finbel.intra
+      http:
+        paths:
+          - path: /api/
+            pathType: Prefix
+            backend:
+              service:
+                name: e705-back-service
+                port:
+                  number: 80
+  tls:
+    - hosts:
+        - e705.dev.finbel.intra
+      secretName: e705-tls

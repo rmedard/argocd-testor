@@ -1,0 +1,174 @@
+# Combined Application Configuration
+spring:
+  # Database Configuration
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    url: jdbc:db2://zldbdead2.rdc.finbel.intra:50970/E705
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    pool-name: Hikari
+    auto-commit: false
+
+  # JPA Configuration
+  jpa:
+    database-platform: org.hibernate.dialect.DB2Dialect
+    database: db2
+    show-sql: true
+    properties:
+      hibernate:
+        default_schema: E705_SB3
+        format_sql: true
+        id:
+          new_generator_mappings: true
+        connection:
+          provider_disables_autocommit: true
+        cache:
+          use_second_level_cache: false
+          use_query_cache: false
+        generate_statistics: false
+        boot:
+          allow_jdbc_metadata_access: false
+
+  # Flyway Configuration
+  flyway:
+    enabled: false
+    skip-executing-migrations: true
+
+  # OAuth2 Configuration
+  security:
+    oauth2:
+      client:
+        registration:
+          sitran-profile:
+            client-id: ${E705_CLIENT_ID}
+            client-secret: ${E705_CLIENT_SECRET}
+            scope: 'SITRAN-commonuser'
+            authorization-grant-type: client_credentials
+          iam-dir:
+            client-id: ${E705_CLIENT_ID}
+            client-secret: ${E705_CLIENT_SECRET}
+            scope: 'LDAPaccess-read'
+            authorization-grant-type: client_credentials
+          officefin:
+            client-id: ${E705_CLIENT_ID}
+            client-secret: ${E705_CLIENT_SECRET}
+            scope: 'officefin-outlook'
+            authorization-grant-type: client_credentials
+          audit-log:
+            client-id: ${E705_CLIENT_ID}
+            client-secret: ${E705_CLIENT_SECRET}
+            scope: 'AuditLog-write'
+            authorization-grant-type: client_credentials
+        provider:
+          sitran-profile:
+            token-uri: https://am-a.finbel.intra/sso/oauth2/realms/root/realms/internalws/access_token
+          iam-dir:
+            token-uri: https://am-a.finbel.intra/sso/oauth2/realms/root/realms/internalws/access_token
+          officefin:
+            token-uri: https://am-a.finbel.intra/sso/oauth2/realms/root/realms/internalws/access_token
+          audit-log:
+            token-uri: https://am-a.finbel.intra/sso/oauth2/realms/root/realms/internalws/access_token
+
+# Server Configuration
+server:
+  max-http-header-size: '10000000'
+  error:
+    include-stacktrace: ALWAYS
+  servlet:
+    context-path: /api
+    session:
+      cookie:
+        secure: true
+        same-site: lax
+      timeout: 30m
+# Swagger Configuration
+springdoc:
+  api-docs:
+    enabled: true
+    path: '/api-docs'
+  swagger-ui:
+    path: '/swagger-ui'
+    use-root-path: false
+    disable-swagger-default-url: true
+    csrf:
+      enabled: false
+  remove-broken-reference-definitions: false
+  show-actuator: false
+
+# Logging Configuration
+logging:
+  level:
+    ROOT: INFO
+    be.fgov.minfin.doa.e705: DEBUG
+    org.springframework.web: INFO
+    org.springframework.security: INFO
+    org.springframework.security.oauth2: DEBUG
+    org.springframework.ws.client.MessageTracing.sent: DEBUG
+    org.springframework.ws.server.MessageTracing.sent: DEBUG
+    org.springframework.ws.client.MessageTracing.received: TRACE
+    org.springframework.ws.server.MessageTracing.received: TRACE
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+
+# Application Configuration
+e705:
+  validations:
+    bypass: false
+  security:
+    enabled: true
+    request-header-token-name: minfin-iam-usertoken
+  sitran:
+    profiles:
+      host: 'https://sitran-profiles.dev.finbel.intra/tech/'
+      clientRegistrationId: sitran-profile
+    code:
+      host: 'https://sitran-code.dev.finbel.intra'
+    addresses:
+      host: 'https://sitran-address.dev.finbel.intra/tech/'
+  iam-dir:
+    host: 'https://dir-server.acc.finbel.intra'
+    clientRegistrationId: iam-dir
+    internal-realm-host: https://am-a.finbel.intra/sso/json/realms/root/realms/internal
+  annucomp:
+    host: 'http://apigw-oth.acc.finbel.intra/AnnuComp/api/PUB/v2'
+  entite-tva:
+    host: 'http://ccffwbacc.finbel.intra/entfisc/specific/btw/spocwebservice'
+  argumenten:
+    host: 'http://ccffwbacc.finbel.intra/intraServices/ArgumentenWsTechnical'
+    username: ${ARGUMENTEN_USERNAME}
+    password: ${ARGUMENTEN_PASSWORD}
+  efinbox:
+    host: 'http://apigw.dev.finbel.intra/MyMinfin/EFinboxSoap/UST/v1'
+    enableMessageDelivery: true
+    enableMessagePersistence: true
+    connect-timeout: 30
+    request-timeout: 600
+    username: ${EFINBOX_USERNAME}
+    password: ${EFINBOX_PASSWORD}
+  vp:
+    baseUrl: 'http://virtualprinter.docmgmttest.finbel.intra:4080/REST/virtualPrinter'
+    username: ${VP_USERNAME}
+    password: ${VP_PASSWORD}
+  dad:
+    host: 'http://ccffwbacc.finbel.intra/intraServices/dadTaxbalanceDOE705Technical'
+    username: ${DAD_USERNAME}
+    password: ${DAD_PASSWORD}
+  officefin:
+    host: 'https://officefin.acc.finbel.intra/REST/officeFin/v1'
+    clientRegistrationId: officefin
+  audit-log:
+    host: 'https://auditlog.dev.finbel.intra/REST/log/v3'
+    enable: true
+    sslDisable: false
+    application: e705
+    clientRegistrationId: audit-log
+  mail:
+    alert:
+      addressFrom: 'e705-no-reply@minfin.fed.be'
+      addressToAafisc: 'grp-minfin-e705-alert-aafisc-dev@minfin.fed.be'
+      addressToBbi: 'grp-minfin-e705-alert-bbi-dev@minfin.fed.be'
+  cdis:
+    base-url: 'http://cdis.docmgmttest.finbel.intra:4080'
+    extended-base-url: 'http://cdis-extended.docmgmttest.finbel.intra:4080'
+    username: ${VP_USERNAME}
+    password: ${VP_PASSWORD}

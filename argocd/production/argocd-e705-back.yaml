@@ -1,0 +1,52 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: e705-back
+  # You'll usually want to add your resources to the argocd namespace.
+  # namespace: ""
+  namespace: trv-argocd-app
+  # Add this finalizer ONLY if you want these to cascade delete.
+  # finalizers:
+  # The default behaviour is foreground cascading deletion
+  # - resources-finalizer.argocd.argoproj.io
+  # Alternatively, you can use background cascading deletion
+  # - resources-finalizer.argocd.argoproj.io/background
+  # Add labels to your application object.
+
+spec:
+  # Determines whether go templating will be used in the `template` field below.
+  goTemplate: true
+  # Optional list of go templating options, see https://pkg.go.dev/text/template#Template.Option
+  # This is only relevant if `goTemplate` is true
+  goTemplateOptions: [
+    "missingkey=error"
+  ]
+  generators:
+  - matrix:
+      generators:
+      - git:
+          repoURL: https://cicd.finbel.intra/doa/e705/e705-config.git
+          revision: HEAD
+          directories:
+          - path: environment/production/e705-back
+      - clusters:
+          selector:
+            matchLabels:
+              argocd.argoproj.io/secret-type: cluster
+              environment.type: production
+              orchestrator.type: openshift
+
+  template:
+    metadata:
+      name: '{{ .path.basename }}-{{ index .metadata.labels "environment.name" }}'
+    spec:
+      project: doa-e705-config
+      sources:
+      - repoURL: https://cicd.finbel.intra/doa/e705/e705-config.git
+        targetRevision: HEAD
+        path: '{{ .path.path }}/{{ index .metadata.labels "environment.name" }}'
+      destination:
+        server: '{{ .server }}'
+        namespace: doa-e705-prod
+

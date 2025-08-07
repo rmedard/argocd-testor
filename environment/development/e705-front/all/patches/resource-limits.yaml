@@ -1,0 +1,10 @@
+# Patch for resource limits - can be customized per environment
+- op: replace
+  path: /spec/template/spec/containers/0/resources
+  value:
+    limits:
+      memory: 2Gi
+      # cpu: 200m  # Uncomment and adjust as needed
+    requests:
+      cpu: 100m
+      memory: 256Mi

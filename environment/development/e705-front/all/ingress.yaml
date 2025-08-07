@@ -1,0 +1,37 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: e705-ui-internal
+  namespace: doa-e705-dev
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/affinity: "cookie"
+    nginx.ingress.kubernetes.io/session-cookie-name: "e705Cookie"
+    nginx.ingress.kubernetes.io/session-cookie-expires: "172800"
+    nginx.ingress.kubernetes.io/session-cookie-max-age: "172800"
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "*"
+    nginx.ingress.kubernetes.io/cors-allow-methods: "GET, POST, PUT, DELETE, PATCH, OPTIONS"
+    nginx.ingress.kubernetes.io/cors-allow-headers: "Authorization, Origin, X-Requested-With, Content-Type, Accept"
+    minfin.oauth2.be/iam-env: "acc"
+    minfin.oauth2.be/iam-realm: "internal"
+    minfin.oauth2.be/iam-flow: "oidc"
+    minfin.oauth2.be/clientId: "E705"
+    minfin.oauth2.be/errorPage403: "http://ccffwbacc.finbel.intra/error/oam/pas-acces-geen-toegang.html"
+spec:
+  ingressClassName: "oauth2"
+  tls:
+    - hosts:
+        - e705.dev.finbel.intra
+      secretName: e705-tls
+  rules:
+    - host: e705.dev.finbel.intra
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: e705-ui-service
+                port:
+                  name: http
