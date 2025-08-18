@@ -5,7 +5,7 @@ metadata:
   namespace: doa-e705-dev
   labels:
     app: e705-app
-    version: 1.0.1-854-e9551f4b
+    version: 1.0.1-896-40407f90
   annotations:
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     nginx.ingress.kubernetes.io/enable-cors: "true"
@@ -24,7 +24,7 @@ spec:
               service:
                 name: e705-back-service
                 port:
-                  number: 80
+                  number: 8080
   tls:
     - hosts:
         - e705.dev.finbel.intra

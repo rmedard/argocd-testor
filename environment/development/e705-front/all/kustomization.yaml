@@ -7,7 +7,6 @@ metadata:
 resources:
   - deployment.yaml
   - service.yaml
-  - configmap.yaml
   - service-account.yaml
   - ingress.yaml
 
@@ -20,11 +19,8 @@ labels:
       app.kubernetes.io/component: e705-front
       app.kubernetes.io/part-of: e705-app
 
-# Namespace for all resources
-namespace: default
-
 # Name prefix for all resources
-namePrefix: e705-ui-
+#namePrefix: e705-ui-
 
 # Images to use
 images:
@@ -35,14 +31,31 @@ images:
 # ConfigMap generator for application config
 configMapGenerator:
   - name: e705-ui-config
-    literals: []
-    # Add config values as needed, for example:
-    # - SERVER_PORT=8080
-    # - LOG_LEVEL=info
+    literals:
+      - LOG_LEVEL=info
+      - DEBUG_MODE=false
+    options:
+      disableNameSuffixHash: true
 
 # Patches for environment-specific customizations
 patches:
-  - path: patches/resource-limits.yaml
-    target:
+  - target:
       kind: Deployment
       name: e705-ui
+    patch: |-
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: e705-ui
+      spec:
+        template:
+          spec:
+            containers:
+              - name: e705-ui
+                resources:
+                  limits:
+                    memory: 2Gi
+                    cpu: 500m  # Adding CPU limit
+                  requests:
+                    cpu: 100m
+                    memory: 256Mi

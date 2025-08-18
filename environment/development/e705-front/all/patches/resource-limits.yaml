@@ -1,10 +1,17 @@
-# Patch for resource limits - can be customized per environment
-- op: replace
-  path: /spec/template/spec/containers/0/resources
-  value:
-    limits:
-      memory: 2Gi
-      # cpu: 200m  # Uncomment and adjust as needed
-    requests:
-      cpu: 100m
-      memory: 256Mi
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: e705-ui
+spec:
+  template:
+    spec:
+      containers:
+        - name: e705-ui
+          resources:
+            limits:
+              memory: 2Gi
+              cpu: 500m  # Add CPU limit
+            requests:
+              cpu: 100m
+              memory: 256Mi
+      automountServiceAccountToken: false

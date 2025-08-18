@@ -71,6 +71,7 @@ spring:
 
 # Server Configuration
 server:
+  port: 8080
   max-http-header-size: '10000000'
   error:
     include-stacktrace: ALWAYS
@@ -81,6 +82,20 @@ server:
         secure: true
         same-site: lax
       timeout: 30m
+
+management:
+  server:
+    port: 8081
+  endpoints:
+    web:
+      base-path: /actuator
+      exposure:
+        include: prometheus, health, info, metrics
+  metrics:
+    tags:
+      application: ${spring.application.name:e705}
+      environment: ${spring.profiles.active:dev}
+
 # Swagger Configuration
 springdoc:
   api-docs:
