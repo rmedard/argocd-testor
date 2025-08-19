@@ -4,9 +4,7 @@ metadata:
   name: e705-ingress-core
   namespace: doa-e705-dev
   labels:
-    app.kubernetes.io/component: e705-back
-    app.kubernetes.io/instance: e705-back-service
-    app.kubernetes.io/part-of: e705-app
+    app: e705-app
   annotations:
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     nginx.ingress.kubernetes.io/affinity: "cookie"

@@ -11,16 +11,12 @@ resources:
   - ingress-core.yaml
   - ingress-public.yaml
   - external-secret.yaml
-
 # Common labels applied to all resources
 labels:
   - pairs:
       app.kubernetes.io/name: e705-back
-      app.kubernetes.io/instance: e705-back-service
-      app.kubernetes.io/version: 1.0.1-896-40407f90
       app.kubernetes.io/component: e705-back
       app.kubernetes.io/part-of: e705-app
-
 configMapGenerator:
   - name: e705-back-config
     files:
@@ -29,23 +25,19 @@ configMapGenerator:
       - SPRING_PROFILES_ACTIVE=dev
     options:
       disableNameSuffixHash: true
-
 secretGenerator:
   - name: ca-certs-secret
     files:
       - certs/finbel-root-ca.pem
-
 # Image transformations
 images:
   - name: e705
     newName: finvmharborp01.finbel.intra/doa-e705/e705
-    newTag: 1.0.1-896-40407f90
-
+    newTag: 3.0.0-956-08ae13e4
 # Resource customization
 replicas:
   - name: e705-back-deployment
     count: 1
-
 # Add resource constraints to all containers
 patches:
   - target:

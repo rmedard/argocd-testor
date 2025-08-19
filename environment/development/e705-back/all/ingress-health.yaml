@@ -1,11 +1,10 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: e705-ingress-public
+  name: e705-ingress-health
   namespace: doa-e705-dev
   labels:
     app: e705-app
-    version: 1.0.1-896-40407f90
   annotations:
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     nginx.ingress.kubernetes.io/enable-cors: "true"

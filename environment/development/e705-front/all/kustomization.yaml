@@ -14,19 +14,8 @@ resources:
 labels:
   - pairs:
       app.kubernetes.io/name: e705-ui
-      app.kubernetes.io/instance: e705-ui-service
-      app.kubernetes.io/version: 0.0.1-561-9542900d
       app.kubernetes.io/component: e705-front
       app.kubernetes.io/part-of: e705-app
-
-# Name prefix for all resources
-#namePrefix: e705-ui-
-
-# Images to use
-images:
-  - name: e705-ui
-    newName: finvmharborp01.finbel.intra/doa-e705/e705-ui
-    newTag: 0.0.1-561-9542900d
 
 # ConfigMap generator for application config
 configMapGenerator:
@@ -37,16 +26,22 @@ configMapGenerator:
     options:
       disableNameSuffixHash: true
 
+# Images to use
+images:
+  - name: e705-ui
+    newName: finvmharborp01.finbel.intra/doa-e705/e705-ui
+    newTag: 0.0.1-561-9542900d
+
 # Patches for environment-specific customizations
 patches:
   - target:
       kind: Deployment
-      name: e705-ui
+      name: e705-ui-deployment
     patch: |-
       apiVersion: apps/v1
       kind: Deployment
       metadata:
-        name: e705-ui
+        name: e705-ui-deployment
       spec:
         template:
           spec:

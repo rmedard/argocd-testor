@@ -36,7 +36,7 @@ spec:
             capabilities:
               drop:
                 - ALL
-          image: e705:1.0.1-896-40407f90
+          image: e705
           imagePullPolicy: IfNotPresent
           volumeMounts:
             - name: config
@@ -59,8 +59,6 @@ spec:
                 -Dmanagement.server.port=8081
             - name: HTTP_PROXY
               value: "http://proxies.finbel.intra:8080"
-            - name: APP_VERSION
-              value: "1.0.1-896-40407f90"
             - name: HTTPS_PROXY
               value: "http://proxies.finbel.intra:8080"
             - name: NO_PROXY
@@ -81,26 +79,25 @@ spec:
             httpGet:
               path: /actuator/health/liveness
               port: management-port
-            initialDelaySeconds: 90
-            failureThreshold: 30
+            initialDelaySeconds: 45
             periodSeconds: 10
+            timeoutSeconds: 10
+            failureThreshold: 15
           livenessProbe:
             httpGet:
               path: /actuator/health/liveness
               port: management-port
-            initialDelaySeconds: 90
-            timeoutSeconds: 5
-            periodSeconds: 10
-            successThreshold: 1
+            initialDelaySeconds: 0
+            periodSeconds: 30
+            timeoutSeconds: 10
             failureThreshold: 3
           readinessProbe:
             httpGet:
               path: /actuator/health/readiness
               port: management-port
-            initialDelaySeconds: 90
+            initialDelaySeconds: 0
+            periodSeconds: 5
             timeoutSeconds: 5
-            periodSeconds: 10
-            successThreshold: 1
             failureThreshold: 3
           resources:
             limits:

@@ -3,6 +3,8 @@ kind: Ingress
 metadata:
   name: e705-ui-internal
   namespace: doa-e705-dev
+  labels:
+    app: e705-app
   annotations:
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
     nginx.ingress.kubernetes.io/affinity: "cookie"

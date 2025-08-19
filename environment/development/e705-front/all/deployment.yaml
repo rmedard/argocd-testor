@@ -1,20 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: e705-ui
+  name: e705-ui-deployment
   namespace: doa-e705-dev
+  labels:
+    app: e705-app
 spec:
   replicas: 1
   revisionHistoryLimit: 2
   selector:
     matchLabels:
-      app.kubernetes.io/name: e705-ui
-      app.kubernetes.io/instance: e705-ui-dev
+      app: e705-app
   template:
     metadata:
-      labels:
-        app.kubernetes.io/name: e705-ui
-        app.kubernetes.io/instance: e705-ui-dev
+      namespace: doa-e705-dev
     spec:
       serviceAccountName: sa-e705-front
       securityContext:
