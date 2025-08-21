@@ -14,13 +14,13 @@ spec:
   template:
     metadata:
       namespace: doa-e705-dev
+      labels:
+        app: e705-app
     spec:
       serviceAccountName: sa-e705-front
-      securityContext:
-        runAsNonRoot: true
       automountServiceAccountToken: false
       containers:
-        - name: e705-ui
+        - name: e705-front
           securityContext:
             allowPrivilegeEscalation: false
             runAsNonRoot: true
@@ -29,6 +29,9 @@ spec:
                 - ALL
           image: e705-ui
           imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - name: config
+              mountPath: /opt/app/ui-config
           env:
             - name: SERVER_PORT
               value: "8080"
@@ -48,4 +51,8 @@ spec:
             requests:
               cpu: 100m
               memory: 256Mi
-              ephemeral-storage: "2Gi"
+              ephemeral-storage: 1Gi
+      volumes:
+        - name: config
+          configMap:
+            name: e705-ui-config

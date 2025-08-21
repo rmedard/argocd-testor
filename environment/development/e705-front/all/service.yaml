@@ -14,5 +14,3 @@ spec:
       name: http
   selector:
     app: e705-app
-    app.kubernetes.io/name: e705-ui
-    app.kubernetes.io/instance: e705-ui-dev

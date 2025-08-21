@@ -3,20 +3,17 @@ kind: Kustomization
 metadata:
   name: e705-ui
   namespace: doa-e705-dev
-
 resources:
   - deployment.yaml
   - service.yaml
   - service-account.yaml
   - ingress.yaml
-
 # Common labels applied to all resources
 labels:
   - pairs:
       app.kubernetes.io/name: e705-ui
       app.kubernetes.io/component: e705-front
       app.kubernetes.io/part-of: e705-app
-
 # ConfigMap generator for application config
 configMapGenerator:
   - name: e705-ui-config
@@ -25,13 +22,11 @@ configMapGenerator:
       - DEBUG_MODE=false
     options:
       disableNameSuffixHash: true
-
 # Images to use
 images:
   - name: e705-ui
     newName: finvmharborp01.finbel.intra/doa-e705/e705-ui
-    newTag: 0.0.1-561-9542900d
-
+    newTag: 3.0.0-627-33d0a6af
 # Patches for environment-specific customizations
 patches:
   - target:

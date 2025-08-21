@@ -33,7 +33,7 @@ secretGenerator:
 images:
   - name: e705
     newName: finvmharborp01.finbel.intra/doa-e705/e705
-    newTag: 3.0.0-956-08ae13e4
+    newTag: 3.0.0-962-9b169185
 # Resource customization
 replicas:
   - name: e705-back-deployment
