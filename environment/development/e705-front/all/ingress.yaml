@@ -21,11 +21,11 @@ metadata:
     minfin.oauth2.be/clientId: "E705"
     minfin.oauth2.be/errorPage403: "http://ccffwbacc.finbel.intra/error/oam/pas-acces-geen-toegang.html"
 spec:
-  ingressClassName: "oauth2"
-#  tls:
-#    - hosts:
-#        - e705.dev.finbel.intra
-#      secretName: e705-tls
+#  ingressClassName: "oauth2"
+  tls:
+    - hosts:
+        - e705.dev.finbel.intra
+      secretName: e705-tls
   rules:
     - host: e705.dev.finbel.intra
       http:

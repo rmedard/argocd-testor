@@ -41,7 +41,7 @@ patches:
         template:
           spec:
             containers:
-              - name: e705-ui
+              - name: e705-front
                 resources:
                   limits:
                     memory: 2Gi

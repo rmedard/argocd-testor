@@ -25,7 +25,7 @@ metadata:
     minfin.oauth2.be/scopes: "openid profile"
     minfin.oauth2.be/fineGrainedWs: "true"
 spec:
-  ingressClassName: oauth2
+#  ingressClassName: oauth2
   tls:
     - hosts:
         - e705.dev.finbel.intra
