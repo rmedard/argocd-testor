@@ -12,7 +12,7 @@ resources:
 labels:
   - pairs:
       app.kubernetes.io/name: e705-ui
-      app.kubernetes.io/component: e705-front
+      app.kubernetes.io/component: e705-frontend
       app.kubernetes.io/part-of: e705-app
 # ConfigMap generator for application config
 configMapGenerator:

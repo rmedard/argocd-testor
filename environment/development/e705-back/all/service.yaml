@@ -22,3 +22,4 @@ spec:
       name: management
   selector:
     app: e705-app
+    component: e705-backend

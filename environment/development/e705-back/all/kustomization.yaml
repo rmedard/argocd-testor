@@ -15,7 +15,7 @@ resources:
 labels:
   - pairs:
       app.kubernetes.io/name: e705-back
-      app.kubernetes.io/component: e705-back
+      app.kubernetes.io/component: e705-backend
       app.kubernetes.io/part-of: e705-app
 configMapGenerator:
   - name: e705-back-config
